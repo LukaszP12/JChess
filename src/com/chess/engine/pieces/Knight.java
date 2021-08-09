@@ -8,6 +8,7 @@ import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Knight extends Piece {
@@ -21,7 +22,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public List<Move> calculateLegalMoves(Board board) {
+    public Collection<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 
@@ -38,12 +39,12 @@ public class Knight extends Piece {
 
                 final Tile candidateDestinationTile = board.getTile(candidateDestitationCoordinate);
                 if (!candidateDestinationTile.isTileOccupied()) {
-                    legalMoves.add(new Move());
+                    legalMoves.add(new Move.MajorMove(board,this,candidateDestitationCoordinate));
                 } else {
                     final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                     if (this.pieceAlliance != pieceAlliance) {
-                        legalMoves.add(new Move());
+                        legalMoves.add(new Move.AttackMove(board,this,candidateDestitationCoordinate,pieceAtDestination));
                     }
                 }
             }
@@ -69,5 +70,5 @@ public class Knight extends Piece {
         return BoardUtils.EIGHT_COLUMN[currentPosition] && (candidateOffset == -15) || (candidateOffset == -6)
                 || (candidateOffset == 10) || (candidateOffset == 17);
     }
-    
+
 }
