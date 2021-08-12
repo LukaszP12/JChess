@@ -17,7 +17,7 @@ public class Knight extends Piece {
     };
 
     public Knight(final Alliance pieceAlliance, final int piecePosition) {
-        super(piecePosition,pieceAlliance);
+        super(piecePosition, pieceAlliance);
     }
 
     @Override
@@ -38,18 +38,23 @@ public class Knight extends Piece {
 
                 final Tile candidateDestinationTile = board.getTile(candidateDestitationCoordinate);
                 if (!candidateDestinationTile.isTileOccupied()) {
-                    legalMoves.add(new Move.MajorMove(board,this,candidateDestitationCoordinate));
+                    legalMoves.add(new Move.MajorMove(board, this, candidateDestitationCoordinate));
                 } else {
                     final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                     if (this.pieceAlliance != pieceAlliance) {
-                        legalMoves.add(new Move.AttackMove(board,this,candidateDestitationCoordinate,pieceAtDestination));
+                        legalMoves.add(new Move.AttackMove(board, this, candidateDestitationCoordinate, pieceAtDestination));
                     }
                 }
             }
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return PieceType.KNIGHT.toString();
     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) {

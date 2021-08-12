@@ -7,7 +7,6 @@ import com.chess.engine.board.Move;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Pawn extends Piece {
@@ -19,7 +18,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public Collection<Move> calculateLegalMoves(final Board board) {
+    public ImmutableList<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 
@@ -67,5 +66,10 @@ public class Pawn extends Piece {
         }
 
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return PieceType.PAWN.toString();
     }
 }

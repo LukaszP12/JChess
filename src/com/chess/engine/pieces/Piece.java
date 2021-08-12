@@ -11,14 +11,12 @@ public abstract class Piece {
     protected final Alliance pieceAlliance;
     protected final boolean isFirstMove;
 
-    public Piece(final int piecePosition, final Alliance pieceAlliance, boolean isFirstMove) {
+    public Piece(final int piecePosition, final Alliance pieceAlliance) {
         this.pieceAlliance = pieceAlliance;
         this.piecePosition = piecePosition;
         //TODO more work here
         this.isFirstMove = false;
     }
-
-    public abstract ImmutableList<Move> calculateLegalMoves(final Board board);
 
     public Alliance getPieceAlliance() {
         return this.pieceAlliance;
@@ -29,6 +27,30 @@ public abstract class Piece {
     }
 
     public int getPiecePosition() {
-
+        return piecePosition;
     }
+
+    public abstract ImmutableList<Move> calculateLegalMoves(final Board board);
+
+    public enum PieceType {
+
+        PAWN("P"),
+        KNIGHT("N"),
+        BISHOP("B"),
+        ROOK("R"),
+        QUEEN("Q"),
+        KING("K");
+
+        private String pieceName;
+
+        PieceType(final String pieceName) {
+            this.pieceName = pieceName;
+        }
+
+        @Override
+        public String toString() {
+            return this.pieceName;
+        }
+    }
+
 }
