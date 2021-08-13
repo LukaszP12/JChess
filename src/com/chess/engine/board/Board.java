@@ -3,6 +3,7 @@ package com.chess.engine.board;
 import com.chess.engine.Alliance;
 import com.chess.engine.pieces.*;
 import com.chess.engine.player.BlackPlayer;
+import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
 
@@ -17,15 +18,16 @@ public class Board {
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
 
-    private Board(Builder builder) {
+    private Board(Builder builder, WhitePlayer whitePlayer, BlackPlayer blackPlayer) {
         this.gameBoard = createGameBoard(builder);
+        this.whitePlayer = whitePlayer;
+        this.blackPlayer = blackPlayer;
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
 
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
 
-        this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
     }
 
     private static String prettyPrint(Tile tile) {
@@ -47,6 +49,14 @@ public class Board {
             }
         }
         return builder.toString();
+    }
+
+    public Player whitePlayer() {
+        return this.whitePlayer;
+    }
+
+    public Player blackPlayer() {
+        return this.blackPlayer;
     }
 
     public Collection<Piece> getBlackPieces() {
@@ -154,7 +164,7 @@ public class Board {
         }
 
         public Board build() {
-            return new Board(this);
+            return new Board(this, build().whitePlayer, build().blackPlayer);
         }
     }
 }
