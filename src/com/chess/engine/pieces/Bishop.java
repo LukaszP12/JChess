@@ -4,78 +4,85 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Move.MajorAttackMove;
+import com.chess.engine.board.Move.MajorMove;
 import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Bishop extends Piece {
 
-    private final static int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-9, -7, 7, 9};
+    private final static int[] CANDIDATE_MOVE_COORDINATES = {-9, -7, 7, 9};
 
-    public Bishop(final Alliance pieceAlliance,
+    public Bishop(final Alliance alliance,
                   final int piecePosition) {
-        super(PieceType.BISHOP, piecePosition, pieceAlliance, true);
+        super(PieceType.BISHOP, alliance, piecePosition, true);
     }
 
-    public Bishop(final Alliance pieceAlliance,
+    public Bishop(final Alliance alliance,
                   final int piecePosition,
                   final boolean isFirstMove) {
-        super(PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
+        super(PieceType.BISHOP, alliance, piecePosition, isFirstMove);
     }
 
     @Override
-    public Collection<Move> calculateLegalMoves(Board board) {
-
+    public Collection<Move> calculateLegalMoves(final Board board) {
         final List<Move> legalMoves = new ArrayList<>();
-
-        for (final int candidateCoordinateOffset : CANDIDATE_MOVE_VECTOR_COORDINATES) {
+        for (final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
             int candidateDestinationCoordinate = this.piecePosition;
             while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-
-                if (isFirstColumnExlusion(candidateDestinationCoordinate, candidateCoordinateOffset) ||
-                        isEightColumnExlusion(candidateDestinationCoordinate, candidateCoordinateOffset)) {
+                if (isFirstColumnExclusion(currentCandidateOffset, candidateDestinationCoordinate) ||
+                        isEighthColumnExclusion(currentCandidateOffset, candidateDestinationCoordinate)) {
                     break;
                 }
-                candidateDestinationCoordinate += candidateCoordinateOffset;
+                candidateDestinationCoordinate += currentCandidateOffset;
                 if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-
-                    final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
-                    if (!candidateDestinationTile.isTileOccupied()) {
-                        legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
+                    final Piece pieceAtDestination = board.getPiece(candidateDestinationCoordinate);
+                    if (pieceAtDestination == null) {
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
-                        final Piece pieceAtDestination = candidateDestinationTile.getPiece();
-                        final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
+                        final Alliance pieceAlliance = pieceAtDestination.getPieceAllegiance();
                         if (this.pieceAlliance != pieceAlliance) {
-                            legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                            legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate,
+                                    pieceAtDestination));
                         }
                         break;
                     }
                 }
             }
         }
+        return Collections.unmodifiableList(legalMoves);
+    }
 
-        return ImmutableList.copyOf(legalMoves);
+    @Override
+    public int locationBonus() {
+        return this.pieceAlliance.bishopBonus(this.piecePosition);
     }
 
     @Override
     public Bishop movePiece(final Move move) {
-        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+        return PieceUtils.INSTANCE.getMovedBishop(move.getMovedPiece().getPieceAllegiance(), move.getDestinationCoordinate());
     }
 
     @Override
     public String toString() {
-        return PieceType.BISHOP.toString();
+        return this.pieceType.toString();
     }
 
-    private static boolean isFirstColumnExlusion(final int currentPosition, final int candidateOffset) {
-        return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -9 || candidateOffset == 7);
+    private static boolean isFirstColumnExclusion(final int currentCandidate,
+                                                  final int candidateDestinationCoordinate) {
+        return (BoardUtils.INSTANCE.FIRST_COLUMN.get(candidateDestinationCoordinate) &&
+                ((currentCandidate == -9) || (currentCandidate == 7)));
     }
 
-    private static boolean isEightColumnExlusion(final int currentPosition, final int candidateOffset) {
-        return BoardUtils.EIGHT_COLUMN[currentPosition] && (candidateOffset == -7 || candidateOffset == 9);
+    private static boolean isEighthColumnExclusion(final int currentCandidate,
+                                                   final int candidateDestinationCoordinate) {
+        return BoardUtils.INSTANCE.EIGHTH_COLUMN.get(candidateDestinationCoordinate) &&
+                ((currentCandidate == -7) || (currentCandidate == 9));
     }
 
 }

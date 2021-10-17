@@ -8,17 +8,16 @@ import com.chess.engine.player.WhitePlayer;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
 
     private final Map<Integer, Piece> boardConfig;
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
-
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
-
     private final Pawn enPassantPawn;
     private final Move transitionMove;
 
@@ -52,7 +51,7 @@ public class Board {
 
     private static String prettyPrint(final Piece piece) {
         if (piece != null) {
-            return piece.getPieceAlliance().isBlack() ?
+            return piece.getPieceAllegiance().isBlack() ?
                     piece.toString().toLowerCase() : piece.toString();
         }
         return "-";
@@ -136,7 +135,7 @@ public class Board {
         builder.setPiece(new Knight(Alliance.WHITE, 57));
         builder.setPiece(new Bishop(Alliance.WHITE, 58));
         builder.setPiece(new Queen(Alliance.WHITE, 59));
-        builder.setPiece(new King(Alliance.WHITE, 60));
+        builder.setPiece(new King(Alliance.WHITE, 60, true, true));
         builder.setPiece(new Bishop(Alliance.WHITE, 61));
         builder.setPiece(new Knight(Alliance.WHITE, 62));
         builder.setPiece(new Rook(Alliance.WHITE, 63));
@@ -154,7 +153,7 @@ public class Board {
     private static Collection<Piece> calculateActivePieces(final Builder builder,
                                                            final Alliance alliance) {
         return builder.boardConfig.values().stream()
-                .filter(piece -> piece.getPieceAlliance() == alliance)
+                .filter(piece -> piece.getPieceAllegiance() == alliance)
                 .collect(Collectors.toList());
     }
 

@@ -1,7 +1,8 @@
-package com.chess.engine.player;
+package com.chess.engine.board;
 
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
+import com.chess.engine.player.MoveStatus;
 
 public final class MoveTransition {
 
@@ -35,4 +36,5 @@ public final class MoveTransition {
     public MoveStatus getMoveStatus() {
         return this.moveStatus;
     }
+
 }

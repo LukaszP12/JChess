@@ -29,7 +29,7 @@ public abstract class Piece {
         return this.pieceType;
     }
 
-    public Alliance getPieceAlliance() {
+    public Alliance getPieceAllegiance() {
         return this.pieceAlliance;
     }
 
@@ -80,80 +80,18 @@ public abstract class Piece {
 
     public enum PieceType {
 
-        PAWN(100, "P") {
-            @Override
-            public boolean isKing() {
-                return false;
-            }
+        PAWN(100, "P"),
+        KNIGHT(300, "N"),
+        BISHOP(330, "B"),
+        ROOK(500, "R"),
+        QUEEN(900, "Q"),
+        KING(10000, "K");
 
-            @Override
-            public boolean isRook() {
-                return false;
-            }
-        },
-        KNIGHT(300, "N") {
-            @Override
-            public boolean isKing() {
-                return true;
-            }
+        private final int value;
+        private final String pieceName;
 
-            @Override
-            public boolean isRook() {
-                return false;
-            }
-        },
-        BISHOP(300, "B") {
-            @Override
-            public boolean isKing() {
-                return false;
-            }
-
-            @Override
-            public boolean isRook() {
-                return false;
-            }
-        },
-        ROOK(500, "R") {
-            @Override
-            public boolean isKing() {
-                return false;
-            }
-
-            @Override
-            public boolean isRook() {
-                return true;
-            }
-        },
-        QUEEN(900, "Q") {
-            @Override
-            public boolean isKing() {
-                return false;
-            }
-
-            @Override
-            public boolean isRook() {
-                return false;
-            }
-        },
-        KING(10000, "K") {
-            @Override
-            public boolean isKing() {
-                return true;
-            }
-
-            @Override
-            public boolean isRook() {
-                return false;
-            }
-        };
-
-        private int pieceValue;
-        private String pieceName;
-
-        PieceType(final int pieceValue,
-                  final String pieceName) {
-            this.pieceValue = pieceValue;
-            this.pieceName = pieceName;
+        public int getPieceValue() {
+            return this.value;
         }
 
         @Override
@@ -161,13 +99,11 @@ public abstract class Piece {
             return this.pieceName;
         }
 
-        public int getPieceValue() {
-            return this.pieceValue;
+        PieceType(final int val,
+                  final String pieceName) {
+            this.value = val;
+            this.pieceName = pieceName;
         }
-
-        public abstract boolean isKing();
-
-        public abstract boolean isRook();
 
     }
 

@@ -2,7 +2,6 @@ package com.chess.engine.board;
 
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Piece;
-import com.chess.engine.player.MoveTransition;
 
 import java.util.*;
 
@@ -29,12 +28,8 @@ public enum BoardUtils {
     public final List<String> ALGEBRAIC_NOTATION = initializeAlgebraicNotation();
     public final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
     public static final int START_TILE_INDEX = 0;
-
-    public static final String[] ALGEBRAIC_NOTATION = initializeAlgebraicNotation();
-    public static final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
-
-    public static final int NUM_TILES = 64;
     public static final int NUM_TILES_PER_ROW = 8;
+    public static final int NUM_TILES = 64;
 
     private static List<Boolean> initColumn(int columnNumber) {
         final Boolean[] column = new Boolean[NUM_TILES];
@@ -108,7 +103,7 @@ public enum BoardUtils {
         final Piece piece = board.getPiece(frontTile);
         return piece != null &&
                 piece.getPieceType() == Piece.PieceType.PAWN &&
-                piece.getPieceAlliance() != king.getPieceAlliance();
+                piece.getPieceAllegiance() != king.getPieceAllegiance();
     }
 
     public static int mvvlva(final Move move) {
@@ -136,4 +131,5 @@ public enum BoardUtils {
         return board.currentPlayer().isInCheckMate() ||
                 board.currentPlayer().isInStaleMate();
     }
+
 }
