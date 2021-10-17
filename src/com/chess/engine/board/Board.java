@@ -14,9 +14,11 @@ public class Board {
     private final Map<Integer, Piece> boardConfig;
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
+
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+
     private final Pawn enPassantPawn;
     private final Move transitionMove;
 

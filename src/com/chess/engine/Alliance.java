@@ -144,6 +144,10 @@ public enum Alliance {
 
     public abstract int getDirection();
 
+    public abstract boolean isWhite();
+
+    public abstract boolean isBlack();
+
     public abstract int getOppositeDirection();
 
     public abstract int pawnBonus(int position);
@@ -157,10 +161,6 @@ public enum Alliance {
     public abstract int queenBonus(int position);
 
     public abstract int kingBonus(int position);
-
-    public abstract boolean isWhite();
-
-    public abstract boolean isBlack();
 
     public abstract boolean isPawnPromotionSquare(int position);
 

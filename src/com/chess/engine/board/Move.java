@@ -235,8 +235,7 @@ public abstract class Move {
 
     }
 
-    public static class PawnMove
-            extends Move {
+    public static final class PawnMove extends Move {
 
         public PawnMove(final Board board,
                         final Piece pieceMoved,
@@ -279,18 +278,18 @@ public abstract class Move {
 
     }
 
-    public static class PawnEnPassantAttack extends PawnAttackMove {
+    public static class PawnEnPassantAttackMove extends PawnAttackMove {
 
-        public PawnEnPassantAttack(final Board board,
-                                   final Piece pieceMoved,
-                                   final int destinationCoordinate,
-                                   final Piece pieceAttacked) {
+        public PawnEnPassantAttackMove(final Board board,
+                                       final Piece pieceMoved,
+                                       final int destinationCoordinate,
+                                       final Piece pieceAttacked) {
             super(board, pieceMoved, destinationCoordinate, pieceAttacked);
         }
 
         @Override
         public boolean equals(final Object other) {
-            return this == other || other instanceof PawnEnPassantAttack && super.equals(other);
+            return this == other || other instanceof PawnEnPassantAttackMove && super.equals(other);
         }
 
         @Override
@@ -315,7 +314,7 @@ public abstract class Move {
 
     }
 
-    public static class PawnJump
+    public static final class PawnJump
             extends Move {
 
         public PawnJump(final Board board,
