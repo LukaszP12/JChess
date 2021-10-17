@@ -8,6 +8,7 @@ import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Knight extends Piece {
@@ -16,12 +17,19 @@ public class Knight extends Piece {
             -17, -15, -10, -6, 6, 10, 15, 17
     };
 
-    public Knight(final Alliance pieceAlliance, final int piecePosition) {
-        super(PieceType.KNIGHT, piecePosition, pieceAlliance);
+    public Knight(final Alliance pieceAlliance,
+                  final int piecePosition) {
+        super(PieceType.KNIGHT, piecePosition, pieceAlliance, true);
+    }
+
+    public Knight(final Alliance pieceAlliance,
+                  final int piecePosition,
+                  final boolean isFirstMove) {
+        super(PieceType.KNIGHT, piecePosition, pieceAlliance, isFirstMove);
     }
 
     @Override
-    public ImmutableList<Move> calculateLegalMoves(final Board board) {
+    public Collection<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 

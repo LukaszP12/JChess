@@ -8,6 +8,7 @@ import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Bishop extends Piece {
@@ -16,11 +17,17 @@ public class Bishop extends Piece {
 
     public Bishop(final Alliance pieceAlliance,
                   final int piecePosition) {
-        super(PieceType.BISHOP, piecePosition, pieceAlliance);
+        super(PieceType.BISHOP, piecePosition, pieceAlliance, true);
+    }
+
+    public Bishop(final Alliance pieceAlliance,
+                  final int piecePosition,
+                  final boolean isFirstMove) {
+        super(PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
     }
 
     @Override
-    public ImmutableList<Move> calculateLegalMoves(Board board) {
+    public Collection<Move> calculateLegalMoves(Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
 
