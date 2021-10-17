@@ -96,7 +96,7 @@ public enum Alliance {
         }
 
         @Override
-        public boolean isPawnPromotionSquare(final int position) {
+        public boolean isPawnPromotionSquare(int position) {
             return BoardUtils.INSTANCE.EIGHTH_ROW.get(position);
         }
 
