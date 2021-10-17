@@ -190,8 +190,7 @@ public abstract class Move {
 
     }
 
-    public static final class MajorMove
-            extends Move {
+    public static final class MajorMove extends Move {
 
         public MajorMove(final Board board,
                          final Piece pieceMoved,
@@ -512,13 +511,13 @@ public abstract class Move {
         }
 
         @Override
-        public Piece getAttackedPiece() {
-            return this.attackedPiece;
+        public boolean isAttack() {
+            return true;
         }
 
         @Override
-        public boolean isAttack() {
-            return true;
+        public Piece getAttackedPiece() {
+            return this.attackedPiece;
         }
 
     }
@@ -526,7 +525,12 @@ public abstract class Move {
     public static final class NullMove extends Move {
 
         public NullMove() {
-            super(null, null, -1);
+            super(null, 65);
+        }
+
+        @Override
+        public Board execute() {
+            throw new RuntimeException("cannot execute null move!");
         }
 
         @Override
@@ -540,14 +544,10 @@ public abstract class Move {
         }
 
         @Override
-        public Board execute() {
-            throw new RuntimeException("cannot execute null move!");
-        }
-
-        @Override
         public String toString() {
             return "Null Move";
         }
+
     }
 
     public static class MoveFactory {
