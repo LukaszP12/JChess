@@ -6,6 +6,7 @@ import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 
 public enum Alliance {
+
     WHITE() {
         @Override
         public boolean isWhite() {
@@ -298,8 +299,8 @@ public enum Alliance {
             -30, -40, -40, -50, -50, -40, -40, -30
     };
 
-    private static final int UP_DIRECTION = -1;
-
     private static final int DOWN_DIRECTION = 1;
+
+    private static final int UP_DIRECTION = -1;
 
 }

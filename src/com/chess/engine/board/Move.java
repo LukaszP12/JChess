@@ -12,6 +12,8 @@ public abstract class Move {
     protected final Piece movedPiece;
     protected final boolean isFirstMove;
 
+    public static final Move NULL_MOVE = new NullMove();
+
     private Move(final Board board,
                  final Piece pieceMoved,
                  final int destinationCoordinate) {
@@ -37,6 +39,33 @@ public abstract class Move {
         result = 31 * result + this.movedPiece.getPiecePosition();
         result = result + (isFirstMove ? 1 : 0);
         return result;
+    }
+
+    public Board execute() {
+        final Builder builder = new Builder();
+        for (final Piece piece : this.board.currentPlayer().getActivePieces()) {
+            //TODO hashCode and equals for pieces
+            if (!this.movedPiece.equals(piece)) {
+                builder.setPiece(piece);
+            }
+        }
+        for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+            builder.setPiece(piece);
+        }
+        // move the moved piece!
+        builder.setPiece(this.movedPiece.movePiece(this));
+        builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+        return builder.build();
+    }
+
+    public Board execute() {
+        final Builder builder = new Builder();
+        this.board.currentPlayer().getActivePieces().stream().filter(piece -> !this.movedPiece.equals(piece)).forEach(builder::setPiece);
+        this.board.currentPlayer().getOpponent().getActivePieces().forEach(builder::setPiece);
+        builder.setPiece(this.movedPiece.movePiece(this));
+        builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+        builder.setMoveTransition(this);
+        return builder.build();
     }
 
     @Override
@@ -81,18 +110,9 @@ public abstract class Move {
         return null;
     }
 
-    public Board execute() {
-        final Board.Builder builder = new Builder();
-        this.board.currentPlayer().getActivePieces().stream().filter(piece -> !this.movedPiece.equals(piece)).forEach(builder::setPiece);
-        this.board.currentPlayer().getOpponent().getActivePieces().forEach(builder::setPiece);
-        builder.setPiece(this.movedPiece.movePiece(this));
-        builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
-        builder.setMoveTransition(this);
-        return builder.build();
-    }
 
     public Board undo() {
-        final Board.Builder builder = new Builder();
+        final Builder builder = new Builder();
         this.board.getAllPieces().forEach(builder::setPiece);
         builder.setMoveMaker(this.board.currentPlayer().getAlliance());
         return builder.build();
@@ -161,7 +181,7 @@ public abstract class Move {
         @Override
         public Board execute() {
             final Board pawnMovedBoard = this.decoratedMove.execute();
-            final Board.Builder builder = new Builder();
+            final Builder builder = new Builder();
             pawnMovedBoard.currentPlayer().getActivePieces().stream().filter(piece -> !this.promotedPawn.equals(piece)).forEach(builder::setPiece);
             pawnMovedBoard.currentPlayer().getOpponent().getActivePieces().forEach(builder::setPiece);
             builder.setPiece(this.promotionPiece.movePiece(this));
@@ -188,7 +208,7 @@ public abstract class Move {
 
     }
 
-    public static class MajorMove
+    public static final class MajorMove
             extends Move {
 
         public MajorMove(final Board board,
@@ -278,7 +298,7 @@ public abstract class Move {
 
     }
 
-    public static class PawnEnPassantAttack extends PawnAttackMove {
+    public static final class PawnEnPassantAttack extends PawnAttackMove {
 
         public PawnEnPassantAttack(final Board board,
                                    final Piece pieceMoved,
@@ -294,7 +314,7 @@ public abstract class Move {
 
         @Override
         public Board execute() {
-            final Board.Builder builder = new Builder();
+            final Builder builder = new Builder();
             this.board.currentPlayer().getActivePieces().stream().filter(piece -> !this.movedPiece.equals(piece)).forEach(builder::setPiece);
             this.board.currentPlayer().getOpponent().getActivePieces().stream().filter(piece -> !piece.equals(this.getAttackedPiece())).forEach(builder::setPiece);
             builder.setPiece(this.movedPiece.movePiece(this));
@@ -305,7 +325,7 @@ public abstract class Move {
 
         @Override
         public Board undo() {
-            final Board.Builder builder = new Builder();
+            final Builder builder = new Builder();
             this.board.getAllPieces().forEach(builder::setPiece);
             builder.setEnPassantPawn((Pawn) this.getAttackedPiece());
             builder.setMoveMaker(this.board.currentPlayer().getAlliance());
@@ -314,7 +334,7 @@ public abstract class Move {
 
     }
 
-    public static class PawnJump
+    public static final class PawnJump
             extends Move {
 
         public PawnJump(final Board board,
@@ -330,7 +350,7 @@ public abstract class Move {
 
         @Override
         public Board execute() {
-            final Board.Builder builder = new Builder();
+            final Builder builder = new Builder();
             this.board.currentPlayer().getActivePieces().stream().filter(piece -> !this.movedPiece.equals(piece)).forEach(builder::setPiece);
             this.board.currentPlayer().getOpponent().getActivePieces().forEach(builder::setPiece);
             final Pawn movedPawn = (Pawn) this.movedPiece.movePiece(this);
@@ -378,7 +398,7 @@ public abstract class Move {
 
         @Override
         public Board execute() {
-            final Board.Builder builder = new Builder();
+            final Builder builder = new Builder();
             for (final Piece piece : this.board.getAllPieces()) {
                 if (!this.movedPiece.equals(piece) && !this.castleRook.equals(piece)) {
                     builder.setPiece(piece);
@@ -415,7 +435,7 @@ public abstract class Move {
 
     }
 
-    public static class KingSideCastleMove
+    public static final class KingSideCastleMove
             extends CastleMove {
 
         public KingSideCastleMove(final Board board,
@@ -447,7 +467,7 @@ public abstract class Move {
 
     }
 
-    public static class QueenSideCastleMove
+    public static final class QueenSideCastleMove
             extends CastleMove {
 
         public QueenSideCastleMove(final Board board,
@@ -521,11 +541,16 @@ public abstract class Move {
 
     }
 
-    private static class NullMove
+    private static final class NullMove
             extends Move {
 
         private NullMove() {
             super(null, -1);
+        }
+
+        @Override
+        public Board execute() {
+            throw new RuntimeException("cannot execute null move!");
         }
 
         @Override
@@ -536,11 +561,6 @@ public abstract class Move {
         @Override
         public int getDestinationCoordinate() {
             return -1;
-        }
-
-        @Override
-        public Board execute() {
-            throw new RuntimeException("cannot execute null move!");
         }
 
         @Override

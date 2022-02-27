@@ -6,8 +6,6 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.board.Tile;
-import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,10 +64,6 @@ public class Knight extends Piece {
         return PieceUtils.INSTANCE.getMovedKnight(move.getMovedPiece().getPieceAllegiance(), move.getDestinationCoordinate());
     }
 
-    @Override
-    public String toString() {
-        return this.pieceType.toString();
-    }
 
     private static boolean isFirstColumnExclusion(final int currentPosition,
                                                   final int candidateOffset) {
@@ -91,6 +85,11 @@ public class Knight extends Piece {
                                                    final int candidateOffset) {
         return BoardUtils.INSTANCE.EIGHTH_COLUMN.get(currentPosition) && ((candidateOffset == -15) || (candidateOffset == -6) ||
                 (candidateOffset == 10) || (candidateOffset == 17));
+    }
+
+    @Override
+    public String toString() {
+        return this.pieceType.toString();
     }
 
 }

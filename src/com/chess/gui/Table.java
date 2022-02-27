@@ -52,7 +52,7 @@ public class Table {
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
 
-    private Table(MoveLog moveLog) {
+    public Table(MoveLog moveLog) {
         this.gameFrame = new JFrame("BlackWidow");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();

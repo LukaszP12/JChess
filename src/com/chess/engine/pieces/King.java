@@ -4,15 +4,14 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Tile;
-import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static com.chess.engine.board.Move.*;
+import static com.chess.engine.board.Move.MajorAttackMove;
+import static com.chess.engine.board.Move.MajorMove;
 
 public class King extends Piece {
 
@@ -57,15 +56,22 @@ public class King extends Piece {
 
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
+
         final List<Move> legalMoves = new ArrayList<>();
+
         for (final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
+
             if (isFirstColumnExclusion(this.piecePosition, currentCandidateOffset) ||
                     isEighthColumnExclusion(this.piecePosition, currentCandidateOffset)) {
                 continue;
             }
+
             final int candidateDestinationCoordinate = this.piecePosition + currentCandidateOffset;
+
             if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
+
                 final Piece pieceAtDestination = board.getPiece(candidateDestinationCoordinate);
+
                 if (pieceAtDestination == null) {
                     legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                 } else {
@@ -77,7 +83,13 @@ public class King extends Piece {
                 }
             }
         }
+
         return Collections.unmodifiableList(legalMoves);
+    }
+
+    @Override
+    public King movePiece(final Move move) {
+        return new King(this.pieceAlliance, move.getDestinationCoordinate(), false, move.isCastlingMove(), false, false);
     }
 
     @Override
@@ -90,10 +102,6 @@ public class King extends Piece {
         return this.pieceAlliance.kingBonus(this.piecePosition);
     }
 
-    @Override
-    public King movePiece(final Move move) {
-        return new King(this.pieceAlliance, move.getDestinationCoordinate(), false, move.isCastlingMove(), false, false);
-    }
 
     @Override
     public boolean equals(final Object other) {

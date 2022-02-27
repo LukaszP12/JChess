@@ -7,9 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Tile {
+
     protected final int tileCoordinate;
 
     private static final Map<Integer, EmptyTile> EMPTY_TILES_CACHE = createAllPossibleEmptyTiles();
+
+    private Tile(final int tileCoordinate) {
+        this.tileCoordinate = tileCoordinate;
+    }
+
+    public abstract boolean isTileOccupied();
+
+    public abstract Piece getPiece();
+
+    public int getTileCoordinate() {
+        return this.tileCoordinate;
+    }
 
     private static Map<Integer, EmptyTile> createAllPossibleEmptyTiles() {
 
@@ -27,19 +40,8 @@ public abstract class Tile {
         return piece != null ? new OccupiedTile(tileCoordinate, piece) : EMPTY_TILES_CACHE.get(tileCoordinate);
     }
 
-    private Tile(final int tileCoordinate) {
-        this.tileCoordinate = tileCoordinate;
-    }
-
-    public abstract boolean isTileOccupied();
-
-    public abstract Piece getPiece();
-
-    public int getTileCoordinate() {
-        return this.tileCoordinate;
-    }
-
     public static final class EmptyTile extends Tile {
+
         public EmptyTile(final int coordinate) {
             super(coordinate);
         }
@@ -61,17 +63,12 @@ public abstract class Tile {
     }
 
     public static final class OccupiedTile extends Tile {
+
         private final Piece pieceOnTile;
 
         public OccupiedTile(int tileCoordinate, Piece pieceOnTile) {
             super(tileCoordinate);
             this.pieceOnTile = pieceOnTile;
-        }
-
-        @Override
-        public String toString() {
-            return getPiece().getPieceAlliance().isBlack() ? getPiece().toString().toLowerCase() :
-                    getPiece().toString();
         }
 
         @Override
@@ -83,6 +80,13 @@ public abstract class Tile {
         public Piece getPiece() {
             return this.pieceOnTile;
         }
+
+        @Override
+        public String toString() {
+            return getPiece().getPieceAllegiance().isBlack() ? getPiece().toString().toLowerCase() :
+                    getPiece().toString();
+        }
+
     }
 
 }

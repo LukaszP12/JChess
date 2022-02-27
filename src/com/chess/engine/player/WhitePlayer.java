@@ -25,7 +25,6 @@ public class WhitePlayer extends Player {
         super(board, whiteStandardLegalMoves, blackStandardLegalMoves);
     }
 
-
     @Override
     protected Collection<Move> calculateKingCastles(final Collection<Move> playerLegals,
                                                     final Collection<Move> opponentsLegals) {
